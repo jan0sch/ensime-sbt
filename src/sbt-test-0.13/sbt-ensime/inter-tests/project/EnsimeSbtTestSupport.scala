@@ -17,6 +17,7 @@ object EnsimeSbtTestSupport extends AutoPlugin {
 
   private lazy val parser = complete.Parsers.spaceDelimited("<arg>")
   override lazy val buildSettings = Seq(
+    version := "0.1-SNAPSHOT", // reverts the 1.1.x change in default
     ensimeServerVersion := "2.0.0", // our CI needs stable jars
     ensimeProjectServerVersion := "2.0.0", // our CI needs stable jars
     commands += Command.args("ensimeExpect", "<args>")(ensimeExpect)
@@ -48,7 +49,7 @@ object EnsimeSbtTestSupport extends AutoPlugin {
     val jdkHome = javaHome.gimme.getOrElse(file(Properties.jdkHome)).getAbsolutePath
 
     val normalizedFilenames = args.map(filename => filename
-      .replace("{sbtVersion}", sbtVersion.gimme.split("[.]").take(2).mkString("-", ".", ""))
+      .replace("{sbtVersion}", sbtVersion.gimme.split("[.]").take(2).mkString("-", ".", "").replace("1.1", "1.0"))
     )
 
     val List(got, expect) = normalizedFilenames.map { filename =>
@@ -62,6 +63,8 @@ object EnsimeSbtTestSupport extends AutoPlugin {
             replace(baseDir.replace("/private", ""), "BASE_DIR"). // workaround for https://github.com/ensime/ensime-sbt/issues/151
             replace(Properties.userHome + "/.ivy2", "IVY_DIR").
             replace("C:/Users/appveyor/.ivy2", "IVY_DIR").
+            replace("/Users/travis/Library/Caches/Coursier", "COURSIER_DIR/cache").
+            replace("C:/Users/appveyor/AppData/Local/Coursier", "COURSIER_DIR").
             replace(Properties.userHome + "/.coursier", "COURSIER_DIR").
             replace("C:/Users/appveyor/.coursier", "COURSIER_DIR").
             replace("https/repository.jboss.org", "https/repo1.maven.org/maven2"). // maven central hashcode mismatches
