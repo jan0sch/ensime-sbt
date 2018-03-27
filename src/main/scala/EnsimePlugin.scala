@@ -173,11 +173,11 @@ object EnsimePlugin extends AutoPlugin {
 
     ensimeServerVersion := {
       CrossVersion.partialVersion(ensimeScalaVersion.value) match {
-        case Some((2, 10)) => "2.0.0" // 3.0 drops scala 2.10 support
-        case _             => "2.0.0"
+        case Some((2, 10)) => "2.0.1" // 3.0 drops scala 2.10 support
+        case _             => "2.0.1"
       }
     },
-    ensimeProjectServerVersion := "2.0.0", // should really filter on sbtVersion
+    ensimeProjectServerVersion := "2.0.1", // should really filter on sbtVersion
 
     ensimeIgnoreSourcesInBase := false,
     ensimeIgnoreMissingDirectories := false,
@@ -242,8 +242,7 @@ object EnsimePlugin extends AutoPlugin {
     ensimeUseTarget := None,
 
     // I can't get dynamic tasks to work, so this is the hack...
-    // macro-paradise and meta-paradise are fundamentally broken in the PC.
-    ensimeScalacTransformer := (opts => opts.filterNot(_.contains("paradise"))),
+    ensimeScalacTransformer := identity,
     ensimeScalacOptions := ensimeSuggestedScalacOptions(scalaVersion.value),
     ensimeJavacOptions := Nil,
 
