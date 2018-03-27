@@ -7,7 +7,8 @@ ensimeScalacOptions +=  "-wibble"
 lazy val a = project.settings(
   ensimeScalacOptions += "-wobble",
   addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.6"),
-  addCompilerPlugin(("org.scalamacros" % "paradise" % "2.1.1").cross(CrossVersion.full))
+  addCompilerPlugin(("org.scalamacros" % "paradise" % "2.1.1").cross(CrossVersion.full)),
+  ensimeScalacTransformer := (opts => opts.filterNot(_.contains("paradise")))
 )
 
 ensimeScalacOptions in a in Test +=  "-wriggle"
