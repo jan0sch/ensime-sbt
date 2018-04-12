@@ -24,7 +24,7 @@ shadeNamespaces ++= Set("coursier", "scalaz")
 
 libraryDependencies ++= Seq(
   // shade coursier, i.e. don't force binary compatibility on downstream
-  "io.get-coursier" %% "coursier-cache" % "1.0.2" % "shaded"
+  "io.get-coursier" %% "coursier-cache" % "1.0.3" % "shaded"
 ) ++ {
   // coursier needs to know about unshaded things...
   val currentSbtVersion = (sbtVersion in pluginCrossBuild).value
@@ -33,7 +33,7 @@ libraryDependencies ++= Seq(
   else
     Seq(
       "org.scala-lang" % "scala-library" % scalaVersion.value,
-      "org.scala-lang.modules" %% "scala-xml" % "1.0.6"
+      "org.scala-lang.modules" %% "scala-xml" % "1.1.0"
     )
 }
 
@@ -53,12 +53,13 @@ sbtTestDirectory := {
   }
 }
 
-scalaVersion in ThisBuild := "2.12.4"
-sbtVersion in Global := "1.1.1"
-crossSbtVersions := Seq("1.1.1", "0.13.17")
+crossSbtVersions := Seq(sbtVersion.value, "0.13.17")
 
 libraryDependencies += Defaults.sbtPluginExtra(
-  "com.dwijnand" % "sbt-compat" % "1.0.0",
+  "com.dwijnand" % "sbt-compat" % "1.2.6",
   (sbtBinaryVersion in pluginCrossBuild).value,
   (scalaBinaryVersion in update).value
 )
+
+scalacOptions -= "-Ywarn-extra-implicit" // sbt-sensible bug
+scalacOptions -= "-Ywarn-infer-any"
